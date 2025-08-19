@@ -1,5 +1,5 @@
-output "bucket-arns" {
-  value = aws_s3_bucket.buckets.arn
+output "bucket_arns" {
+  value = [for b in aws_s3_bucket.buckets : b.arn]
 }
 
 output "user_names" {
