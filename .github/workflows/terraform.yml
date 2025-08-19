@@ -51,16 +51,12 @@ on:
 
 permissions:
   contents: read
-  id-token: write   # required for OIDC
+  id-token: write   # OIDC
 
 jobs:
   terraform:
-    name: Terraform
     runs-on: ubuntu-latest
     environment: production
-    env:
-      AWS_PROFILE: ""           # ensure no local profile is used
-      AWS_DEFAULT_PROFILE: ""
     defaults:
       run:
         shell: bash
@@ -68,6 +64,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Ensure no profile vars linger from repo/org variables
+      - name: Clear AWS profile env (safety)
+        run: |
+          unset AWS_PROFILE || true
+          unset AWS_DEFAULT_PROFILE || true
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
@@ -81,7 +83,8 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          # omit version to install latest, or pin if you prefer
+          # optionally pin a version:
+          # terraform_version: "1.12.2"
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
