@@ -3,6 +3,5 @@ terraform {
     bucket = "s3-statefile-backend"
     key = "cloudformation-folder/terraform.tfstate"
     region = "us-east-1"
-    profile = "Tita"
   }
 }
