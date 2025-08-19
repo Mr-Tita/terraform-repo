@@ -14,10 +14,10 @@
 
 resource "aws_iam_user" "users" {
   for_each = var.user-name
-  name = each.key
+  name     = each.key
 }
 
 variable "bucket-name" {
-  type = list(string)
-  default = [ "Tita12345675", "Boris123456", "tita0987654" ]
+  type    = list(string)
+  default = ["Tita12345675", "Boris123456", "tita0987654"]
 }
