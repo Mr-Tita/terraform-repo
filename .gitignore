@@ -2,3 +2,4 @@
 .terraform
 provider.tf 
 var.tf
+terraform.tfvars

@@ -1,3 +1,5 @@
-user_name = [ "Tita", "Raph", "Boris" ]
+user_names = [ "Tita", "Raph", "Boris" ]
 
-bucket-name = [ "Tita12345675", "Boris123456", "tita0987654" ]
+bucket_names = [ "Tita12345675", "Boris123456", "tita0987654" ]
+
+aws_region = "us-east-1"

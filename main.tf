@@ -13,10 +13,11 @@
 ## create multiple IAM user from a single resource block. 
 
 resource "aws_iam_user" "users" {
-  for_each = toset(var.user_name)
-  name     = each.key
+  for_each = toset(var.user_names)
+  name     = each.value
 }
 
-variable "bucket-name" {
-  type    = list(string)
+resource "aws_s3_bucket" "buckets" {
+  for_each = toset(var.bucket_names)
+  bucket = each.value
 }
