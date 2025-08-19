@@ -58,6 +58,9 @@ jobs:
     name: Terraform
     runs-on: ubuntu-latest
     environment: production
+    env:
+      AWS_PROFILE: ""           # ensure no local profile is used
+      AWS_DEFAULT_PROFILE: ""
     defaults:
       run:
         shell: bash
@@ -78,6 +81,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
+          # omit version to install latest, or pin if you prefer
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
