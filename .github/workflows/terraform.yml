@@ -51,10 +51,11 @@ on:
 
 permissions:
   contents: read
-  id-token: write   # OIDC
+  id-token: write   # required for OIDC
 
 jobs:
   terraform:
+    name: Terraform
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -80,18 +81,34 @@ jobs:
       - name: Verify AWS identity
         run: aws sts get-caller-identity
 
-      - name: Setup Terraform
+      # If you use Terraform Cloud, this step will include the API token.
+      - name: Setup Terraform (with TF Cloud token)
+        if: ${{ secrets.TF_API_TOKEN != '' }}
         uses: hashicorp/setup-terraform@v3
         with:
-          # optionally pin a version:
-          # terraform_version: "1.12.2"
+          # optionally pin a version, e.g. "1.12.2"
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      # Fallback if you are NOT using Terraform Cloud
+      - name: Setup Terraform
+        if: ${{ secrets.TF_API_TOKEN == '' }}
+        uses: hashicorp/setup-terraform@v3
+        with:
+          # optionally pin a version, e.g. "1.12.2"
+          # terraform_version: "1.12.2"
+          # (no TF Cloud token)
+          # nothing
 
       - name: Terraform Init
         run: terraform init -input=false
 
+      # Auto-fix formatting locally in the runner so fmt-check passes later
       - name: Terraform Format (auto-fix)
-        run: terraform fmt -check -recursive
+        run: terraform fmt -recursive
+
+      # Enforce formatting (will fail if files were still unformatted)
+      - name: Terraform Format (check)
+        run: terraform fmt -recursive -check -diff
 
       - name: Terraform Plan
         run: terraform plan -input=false -out=tfplan
