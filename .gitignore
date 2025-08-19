@@ -1,0 +1,4 @@
+.terraform.lock.hcl
+.terraform
+provider.tf 
+var.tf
