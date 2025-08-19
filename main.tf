@@ -13,11 +13,10 @@
 ## create multiple IAM user from a single resource block. 
 
 resource "aws_iam_user" "users" {
-  for_each = var.user-name
+  for_each = toset(var.user_name)
   name     = each.key
 }
 
 variable "bucket-name" {
   type    = list(string)
-  default = ["Tita12345675", "Boris123456", "tita0987654"]
 }
